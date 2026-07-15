@@ -1,0 +1,65 @@
+# Ingress 1: serviços cujas rotas internas JÁ começam com o prefixo (sem rewrite).
+#   flag-service serve /flags, targeting-service serve /rules, evaluation-service serve /evaluate
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: togglemaster-ingress
+  namespace: togglemaster
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /flags
+            pathType: Prefix
+            backend:
+              service:
+                name: flag-service
+                port:
+                  number: 8002
+          - path: /rules
+            pathType: Prefix
+            backend:
+              service:
+                name: targeting-service
+                port:
+                  number: 8003
+          - path: /evaluate
+            pathType: Prefix
+            backend:
+              service:
+                name: evaluation-service
+                port:
+                  number: 8004
+---
+# Ingress 2: serviços que precisam de rewrite (a rota real NÃO tem o prefixo).
+#   /auth/validate -> auth-service /validate ; /analytics/health -> analytics-service /health
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: togglemaster-ingress-rewrite
+  namespace: togglemaster
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8001
+          - path: /analytics(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: analytics-service
+                port:
+                  number: 8005

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: togglemaster-config
+  namespace: togglemaster
+data:
+  # --- Portas de cada serviço ---
+  AUTH_PORT: "8001"
+  FLAG_PORT: "8002"
+  TARGETING_PORT: "8003"
+  EVALUATION_PORT: "8004"
+  ANALYTICS_PORT: "8005"
+
+  # --- URLs internas (DNS do Kubernetes dentro do namespace togglemaster) ---
+  AUTH_SERVICE_URL: "http://auth-service:8001"
+  FLAG_SERVICE_URL: "http://flag-service:8002"
+  TARGETING_SERVICE_URL: "http://targeting-service:8003"
+
+  # --- Redis (ElastiCache) ---
+  # rediss:// (com TLS) porque o ElastiCache foi criado com encryption in-transit
+  REDIS_URL: "rediss://SEU-ENDPOINT-REDIS.cache.amazonaws.com:6379"
+
+  # --- AWS (analytics-service e evaluation-service) ---
+  # Credenciais NÃO ficam aqui: os pods herdam a LabRole do node (instance profile).
+  AWS_REGION: "us-east-1"
+  AWS_SQS_URL: "https://sqs.us-east-1.amazonaws.com/SUA_CONTA_AWS/togglemaster-events"
+  AWS_DYNAMODB_TABLE: "ToggleMasterAnalytics"

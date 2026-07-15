@@ -1,0 +1,37 @@
+# Ambiente / credenciais
+.env
+*.env
+.aws/
+
+# Segredo preenchido com valores REAIS (nunca versionar)
+k8s/02-secret.yaml
+# Scripts locais com senhas reais
+*.local.sh
+
+# Ferramentas / IDE
+.claude/
+.idea/
+.vscode/
+
+# Documentos de apoio (uso pessoal, não fazem parte da entrega)
+docs/TESTE-LOCAL.md
+docs/VIDEO-ROTEIRO.md
+aws/00-GUIA-PROVISIONAMENTO.md
+*.pdf
+
+# Go
+*.exe
+*.test
+*.out
+bin/
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Docker / OS
+*.log
+.DS_Store
+Thumbs.db
